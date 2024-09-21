@@ -1,0 +1,86 @@
+CREATE TABLE pacientes ( 
+    id_Paciente  SERIAL PRIMARY KEY, 
+    id_Notificaciones_P BIGINT not null, 
+    Documento_Paciente BIGINT NOT null, 
+    Nombre_Paciente VARCHAR(500) NOT NULL, 
+    correo_Paciente VARCHAR(500) UNIQUE NOT NULL, 
+    Direccion_Paciente VARCHAR(500) NOT NULL, 
+    contraseña_Paciente VARCHAR(500) NOT NULL, 
+    telefono_Paciente INT, 
+    fecha_nacimiento DATE NOT NULL, 
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    FOREIGN KEY (id_Notificaciones_P) REFERENCES Notificaciones(id_Notificaciones) ON DELETE CASCADE 
+); 
+ 
+ 
+ 
+ 
+CREATE TABLE medicos ( 
+    id_Medico SERIAL PRIMARY key unique NOT NULL, 
+    id_Notificaciones_M INT not null, 
+    nombre_Medico VARCHAR(500) NOT NULL, 
+    correo_Medico VARCHAR(500) UNIQUE NOT NULL, 
+    contraseña_Medico VARCHAR(255) NOT NULL, 
+    telefono_Medico BIGINT, 
+    especialidad_Medico VARCHAR(100), 
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+     FOREIGN KEY (id_Notificaciones_M) REFERENCES Notificaciones(id_Notificaciones) ON DELETE CASCADE 
+); 
+ 
+ 
+ 
+ 
+ 
+CREATE TABLE Administradores ( 
+    id_Admin SERIAL PRIMARY key unique NOT NULL, 
+    id_Notificaciones_A INT not null, 
+    nombre_Admin VARCHAR(100) NOT NULL, 
+    correo_Admin VARCHAR(100) UNIQUE NOT NULL, 
+    contraseña_Admin VARCHAR(255) NOT NULL, 
+    telefono VARCHAR(10), 
+    nivel_acceso_Admin VARCHAR(50),  
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    FOREIGN KEY (id_Notificaciones_A) REFERENCES Notificaciones(id_Notificaciones) ON DELETE CASCADE 
+); 
+ 
+ 
+CREATE TYPE Estado_cita AS ENUM ( 
+  'pendiente', 'confirmada', 'cancelada' 
+); 
+ 
+CREATE TABLE citas ( 
+    id_Citas Serial PRIMARY key unique NOT NULL, 
+    paciente_id INT NOT NULL, 
+    medico_id INT NOT NULL, 
+    fecha_hora_cita DATE NOT NULL, 
+    Estado_De_Cita Estado_cita DEFAULT 'pendiente', 
+    FOREIGN KEY (paciente_id) REFERENCES pacientes(id_Paciente) ON DELETE CASCADE, 
+    FOREIGN KEY (medico_id) REFERENCES medicos(id_Medico) ON DELETE CASCADE 
+); 
+ 
+CREATE TYPE Receptor AS ENUM ( 
+    'paciente', 'medico', 'administrador' 
+); 
+ 
+ 
+CREATE TABLE notificaciones ( 
+    id_Notificaciones Serial PRIMARY KEY, 
+    receptor_id INT NOT NULL,   
+    tipo_receptor Receptor NOT NULL, 
+    mensaje TEXT NOT NULL, 
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    leida TIMESTAMP DEFAULT FALSE 
+); 
+ 
+ 
+ 
+ 
+CREATE TABLE historial_medico ( 
+    id_Historial Serial PRIMARY KEY, 
+    paciente_id INT NOT NULL, 
+    medico_id INT NOT NULL, 
+    fecha DATE NOT NULL, 
+    descripcion_Historial TEXT NOT NULL, 
+    FOREIGN KEY (paciente_id) REFERENCES pacientes(id_Paciente) ON DELETE CASCADE, 
+    FOREIGN KEY (medico_id) REFERENCES medicos(id_Medico) ON DELETE CASCADE 
+);   bueno muchachos aca esta la base de datos si quieren arreglar algo o agregar algo lo pueden hacer
